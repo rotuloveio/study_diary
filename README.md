@@ -1,1 +1,1 @@
-#study)diary
+Projeto de um Diário de Estudos proposto pela Campus Code, durante o QSD7 
