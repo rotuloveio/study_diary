@@ -92,7 +92,7 @@ def list(itens)
       puts("==== ##{index + 1} - #{category} ====")
       itens.each_with_index do |item, item_index|
         if item.category.to_i == index + 1
-          puts("#{item_index + 1} - #{item.title}")
+          puts("#{item_index + 1} - #{item.title}: #{item.description}")
         end
       end
       puts("\n")

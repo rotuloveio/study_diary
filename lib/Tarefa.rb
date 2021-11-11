@@ -37,7 +37,7 @@ class Tarefa
   def self.find_by_title(title)
     db = SQLite3::Database.open 'db/database.db'
     db.results_as_hash = true
-    tasks = db.execute "SELECT title, category FROM tasks where title LIKE '%#{title}%'"
+    tasks = db.execute "SELECT title, category, descr FROM tasks where descr LIKE '%#{title}%' OR title LIKE '%#{title}%'"
     db.close
 
     tasks.map do |task|
