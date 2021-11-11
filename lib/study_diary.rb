@@ -142,9 +142,10 @@ def search_by_category
   end
 end
 
-def delete
+def delete_or_done(done)
   clear
-  puts('EXCLUIR UM ITEM')
+  done ? puts('MARCAR COMO FEITO') : puts('EXCLUIR UM ITEM')
+
   list(@itens)
   print('Escolha a categoria [0 p/ voltar]: ')
   categories_list = categories_menu
@@ -161,7 +162,7 @@ def delete
   return if category.zero?
 
   clear
-  puts('EXCLUIR UM ITEM')
+  done ? puts('MARCAR COMO FEITO') : puts('EXCLUIR UM ITEM')
 
   filtered_itens = Tarefa.find_by_category(category)
 
@@ -173,63 +174,17 @@ def delete
     list(filtered_itens)
   end
 
-  print('Escolha o item a excluir [0 p/ voltar]: ')
-  excluir = gets.chomp.to_i
+  print('Escolha o item [0 p/ voltar]: ')
+  index = gets.chomp.to_i
 
   valid_itens = (1..filtered_itens.size).to_a
 
-  until valid_itens.include?(excluir) || excluir.zero?
-    print('Opção inválida! Escolha o item: ')
-    excluir = gets.chomp.to_i
+  until valid_itens.include?(index) || index.zero?
+    print('Opção inválida! Escolha o item [0 p/ voltar]: ')
+    index = gets.chomp.to_i
   end
-
-  Tarefa.delete_by_name(filtered_itens[excluir - 1].title) unless excluir.zero?
-
-end
-
-def done
-  clear
-  puts('MARCAR COMO FEITO')
-  list(@itens)
-  print('Escolha a categoria [0 p/ voltar]: ')
-  categories_list = categories_menu
-
-  valid_categories = (1..categories_list.size).to_a
-
-  category = gets.chomp.to_i
-
-  until valid_categories.include?(category) || category.zero?
-    print('Categoria inválida! Escolha a categoria: ')
-    category = gets.chomp.to_i
-  end
-
-  return if category.zero?
-
-  clear
-  puts('MARCAR COMO FEITO')
-
-  filtered_itens = Tarefa.find_by_category(category)
-
-  if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.')
-    puts('__________________________________')
-  else
-    puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens)
-  end
-
-  print('Escolha o item a marcar como feito [0 p/ voltar]: ')
-  marcar = gets.chomp.to_i
-
-  valid_itens = (1..filtered_itens.size).to_a
-
-  until valid_itens.include?(marcar) || marcar.zero?
-    print('Opção inválida! Escolha o item: ')
-    marcar = gets.chomp.to_i
-  end
-  item = filtered_itens[marcar - 1]
-  Tarefa.mark_as_done(item.category, item.title, item.description) unless marcar.zero?
-
+  item = filtered_itens[index - 1]
+  Tarefa.delete_or_done(item.category, item.title, item.description, done) unless index.zero?
 end
 
 def list_done
@@ -266,11 +221,11 @@ loop do
     print("Pressione 'Enter' para continuar")
     gets
   when 5
-    delete
+    delete_or_done(false)
     print("Pressione 'Enter' para continuar")
     gets
   when 6
-    done
+    delete_or_done(true)
     print("Pressione 'Enter' para continuar")
     gets
   when 7

@@ -39,12 +39,6 @@ class Tarefa
     self
   end
 
-  def self.delete_by_name(title)
-    db = SQLite3::Database.open 'db/database.db'
-    db.execute "DELETE FROM tasks WHERE title LIKE '#{title}'"
-    db.close
-  end
-
   def self.find_by_title(title)
     db = SQLite3::Database.open 'db/database.db'
     db.results_as_hash = true
@@ -67,10 +61,10 @@ class Tarefa
     end
   end
 
-  def self.mark_as_done(category, title, description)
+  def self.delete_or_done(category, title, description, done)
     db = SQLite3::Database.open 'db/database.db'
-    db.execute "DELETE FROM tasks WHERE title LIKE '#{title}'"
-    db.execute "INSERT INTO done VALUES ('#{category}', '#{title}', '#{description}')"
+    db.execute "DELETE FROM tasks WHERE title LIKE '#{title}' AND category LIKE '#{category}'"
+    db.execute "INSERT INTO done VALUES ('#{category}', '#{title}', '#{description}')" if done
     db.close
   end
 end
