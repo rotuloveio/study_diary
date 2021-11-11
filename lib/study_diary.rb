@@ -53,7 +53,7 @@ end
 
 def create_item
   clear
-  puts('Cadastrar novo item de estudo: ')
+  puts('CADASTRAR NOVO ITEM')
   print('Digite o nome do item de estudo: ')
   name = gets.chomp
 
@@ -85,6 +85,7 @@ end
 
 def list(itens)
   itens.sort_by!(&:category)
+  puts('LISTA DOS ITENS')
   categories_list = categories_menu
 
   categories_list.each_with_index do |category, index|
@@ -103,7 +104,7 @@ end
   
 def search_by_keyword
   clear
-
+  puts('BUSCAR ITEM DE ESTUDO')
   print('Digite o termo desejado: ')
   key = gets.chomp.downcase
 
@@ -120,7 +121,7 @@ end
 
 def search_by_category
   clear
-  puts('Busca por categoria:')
+  puts('BUSCA POR CATEGORIA')
   categorys_list = categories_menu
   categorys_list.each_with_index do |text, index|
     puts("##{ index + 1 } - #{ text }")
@@ -141,7 +142,7 @@ end
 
 def delete
   clear
-  puts('Excluir um item')
+  puts('EXCLUIR UM ITEM')
   list(@itens)
   print('Escolha a categoria: ')
   categories_list = categories_menu

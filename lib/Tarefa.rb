@@ -48,7 +48,7 @@ class Tarefa
   def self.find_by_category(category)
     db = SQLite3::Database.open 'db/database.db'
     db.results_as_hash = true
-    tasks = db.execute "SELECT title, category FROM tasks where category LIKE '#{category}'"
+    tasks = db.execute "SELECT title, category, descr FROM tasks where category LIKE '#{category}'"
     db.close
 
     tasks.map do |task|
