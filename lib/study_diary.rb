@@ -159,7 +159,10 @@ def delete
   end
 
   return if category.zero?
-  
+
+  clear
+  puts('EXCLUIR UM ITEM')
+
   filtered_itens = Tarefa.find_by_category(category)
 
   if filtered_itens.length.zero?
@@ -201,6 +204,9 @@ def done
   end
 
   return if category.zero?
+
+  clear
+  puts('MARCAR COMO FEITO')
 
   filtered_itens = Tarefa.find_by_category(category)
 
