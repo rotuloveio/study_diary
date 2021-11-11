@@ -15,8 +15,19 @@ class Tarefa
     tasks = db.execute 'SELECT category, title, descr FROM tasks'
     db.close
 
-    tasks.map do |title|
-      new(category: title['category'], title: title['title'], description: title['descr'])
+    tasks.map do |task|
+      new(category: task['category'], title: task['title'], description: task['descr'])
+    end
+  end
+
+  def self.done
+    db = SQLite3::Database.open 'db/database.db'
+    db.results_as_hash = true
+    tasks = db.execute 'SELECT category, title, descr FROM done'
+    db.close
+
+    tasks.map do |task|
+      new(category: task['category'], title: task['title'], description: task['descr'])
     end
   end
 
@@ -54,5 +65,12 @@ class Tarefa
     tasks.map do |task|
       new(category: task['category'], title: task['title'], description: task['descr'])
     end
+  end
+
+  def self.mark_as_done(category, title, description)
+    db = SQLite3::Database.open 'db/database.db'
+    db.execute "DELETE FROM tasks WHERE title LIKE '#{title}'"
+    db.execute "INSERT INTO done VALUES ('#{category}', '#{title}', '#{description}')"
+    db.close
   end
 end

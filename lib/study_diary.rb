@@ -7,6 +7,8 @@ def options_menu
     Buscar item de estudo
     Busca por categoria
     Excluir um item
+    Marcar como feito
+    Listar feitos
     Sair
   OPTIONS
 
@@ -181,6 +183,60 @@ def delete
 
 end
 
+def done
+  clear
+  puts('MARCAR COMO FEITO')
+  list(@itens)
+  print('Escolha a categoria: ')
+  categories_list = categories_menu
+
+  valid_categories = (1..categories_list.size).to_a
+
+  category = gets.chomp.to_i
+
+  until valid_categories.include?(category)
+    print('Categoria inválida! Escolha a categoria: ')
+    category = gets.chomp.to_i
+  end
+
+  filtered_itens = Tarefa.find_by_category(category)
+
+  if filtered_itens.length.zero?
+    puts('Nenhum item encontrado.')
+    puts('__________________________________')
+  else
+    puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
+    list(filtered_itens)
+  end
+
+  print('Escolha o item a marcar como feito: ')
+  marcar = gets.chomp.to_i
+
+  valid_itens = (1..filtered_itens.size).to_a
+
+  until valid_itens.include?(marcar)
+    print('Opção inválida! Escolha o item: ')
+    marcar = gets.chomp.to_i
+  end
+  item = filtered_itens[marcar - 1]
+  Tarefa.mark_as_done(item.category, item.title, item.description)
+  # puts("Chamar método de exclusão do item #{excluir}.")
+
+end
+
+def list_done
+  clear
+  puts('LISTAR FEITOS')
+  filtered_itens = Tarefa.done
+  if filtered_itens.length.zero?
+    puts('Nenhum item encontrado.')
+    puts('__________________________________')
+  else
+    puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
+    list(filtered_itens)
+  end
+end
+
 loop do
   menu
   case @option
@@ -206,6 +262,14 @@ loop do
     print("Pressione 'Enter' para continuar")
     gets
   when 6
+    done
+    print("Pressione 'Enter' para continuar")
+    gets
+  when 7
+    list_done
+    print("Pressione 'Enter' para continuar")
+    gets
+  when 8
     break
   end
 end

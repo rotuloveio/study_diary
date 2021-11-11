@@ -12,7 +12,15 @@ begin
   db.execute <<~SQL
     CREATE TABLE Tasks(
       category varchar(255),
-      name varchar(255),
+      title varchar(255),
+      descr varchar(255)
+    );
+  SQL
+
+  db.execute <<~SQL
+    CREATE TABLE Done(
+      category varchar(255),
+      title varchar(255),
       descr varchar(255)
     );
   SQL
@@ -20,8 +28,7 @@ begin
   seed_data = [[1, 'Usar hashs', 'Estudar o uso de hashs'],
                [3, 'Tabelas', 'Aprender a fazer tabelas'],
                [2, 'Banco de dados', 'Automatizar tabelas'],
-               [1, 'Banco de dados', 'Uso sem Rails'],
-               [4, 'APIs', 'Aprender mais sobre seu uso']]
+               [1, 'Banco de dados', 'Uso sem Rails']]
 
   seed_data.each do |data|
     db.execute 'INSERT INTO Tasks VALUES ( ?, ?, ? )', data
