@@ -86,15 +86,15 @@ def create_item
 end
 
 def list(itens)
-  itens.sort_by!(&:category)
+  itens.sort_by! { |e| e.category.name }
   puts('LISTA DOS ITENS')
   categories_list = categories_menu
 
   categories_list.each_with_index do |category, index|
-    if itens.map{|item| item.category.to_i}.uniq.include?(index + 1)
+    if itens.map{|item| item.category.name.to_i}.uniq.include?(index + 1)
       puts("==== ##{index + 1} - #{category} ====")
       itens.each_with_index do |item, item_index|
-        if item.category.to_i == index + 1
+        if item.category.name.to_i == index + 1
           puts("#{item_index + 1} - #{item.title}: #{item.description}")
         end
       end
@@ -184,7 +184,7 @@ def delete_or_done(done)
     index = gets.chomp.to_i
   end
   item = filtered_itens[index - 1]
-  Tarefa.delete_or_done(item.category, item.title, item.description, done) unless index.zero?
+  Tarefa.delete_or_done(item.category.name, item.title, item.description, done) unless index.zero?
 end
 
 def list_done
@@ -200,38 +200,36 @@ def list_done
   end
 end
 
+def continue
+  print("Pressione 'Enter' para continuar")
+  gets
+end
+
 loop do
   menu
   case @option
   when 1
     create_item
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 2
     clear
     list(@itens)
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 3
     search_by_keyword
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 4
     search_by_category
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 5
     delete_or_done(false)
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 6
     delete_or_done(true)
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 7
     list_done
-    print("Pressione 'Enter' para continuar")
-    gets
+    continue
   when 8
     break
   end

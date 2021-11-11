@@ -1,10 +1,11 @@
 require 'sqlite3'
+require_relative 'Categoria'
 
 class Tarefa
   attr_accessor :category, :title, :description
 
   def initialize(category:, title:, description:)
-    @category = category
+    @category = Categoria.new(name: category)
     @title = title
     @description = description
   end
