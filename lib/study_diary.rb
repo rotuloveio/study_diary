@@ -146,18 +146,20 @@ def delete
   clear
   puts('EXCLUIR UM ITEM')
   list(@itens)
-  print('Escolha a categoria: ')
+  print('Escolha a categoria [0 p/ voltar]: ')
   categories_list = categories_menu
 
   valid_categories = (1..categories_list.size).to_a
 
   category = gets.chomp.to_i
 
-  until valid_categories.include?(category)
-    print('Categoria inválida! Escolha a categoria: ')
+  until valid_categories.include?(category) || category.zero?
+    print('Categoria inválida! Escolha a categoria [0 p/ voltar]: ')
     category = gets.chomp.to_i
   end
 
+  return if category.zero?
+  
   filtered_itens = Tarefa.find_by_category(category)
 
   if filtered_itens.length.zero?
@@ -168,18 +170,17 @@ def delete
     list(filtered_itens)
   end
 
-  print('Escolha o item a excluir: ')
+  print('Escolha o item a excluir [0 p/ voltar]: ')
   excluir = gets.chomp.to_i
 
   valid_itens = (1..filtered_itens.size).to_a
 
-  until valid_itens.include?(excluir)
+  until valid_itens.include?(excluir) || excluir.zero?
     print('Opção inválida! Escolha o item: ')
     excluir = gets.chomp.to_i
   end
 
-  Tarefa.delete_by_name(filtered_itens[excluir - 1].title)
-  # puts("Chamar método de exclusão do item #{excluir}.")
+  Tarefa.delete_by_name(filtered_itens[excluir - 1].title) unless excluir.zero?
 
 end
 
@@ -187,17 +188,19 @@ def done
   clear
   puts('MARCAR COMO FEITO')
   list(@itens)
-  print('Escolha a categoria: ')
+  print('Escolha a categoria [0 p/ voltar]: ')
   categories_list = categories_menu
 
   valid_categories = (1..categories_list.size).to_a
 
   category = gets.chomp.to_i
 
-  until valid_categories.include?(category)
+  until valid_categories.include?(category) || category.zero?
     print('Categoria inválida! Escolha a categoria: ')
     category = gets.chomp.to_i
   end
+
+  return if category.zero?
 
   filtered_itens = Tarefa.find_by_category(category)
 
@@ -209,18 +212,17 @@ def done
     list(filtered_itens)
   end
 
-  print('Escolha o item a marcar como feito: ')
+  print('Escolha o item a marcar como feito [0 p/ voltar]: ')
   marcar = gets.chomp.to_i
 
   valid_itens = (1..filtered_itens.size).to_a
 
-  until valid_itens.include?(marcar)
+  until valid_itens.include?(marcar) || marcar.zero?
     print('Opção inválida! Escolha o item: ')
     marcar = gets.chomp.to_i
   end
   item = filtered_itens[marcar - 1]
-  Tarefa.mark_as_done(item.category, item.title, item.description)
-  # puts("Chamar método de exclusão do item #{excluir}.")
+  Tarefa.mark_as_done(item.category, item.title, item.description) unless marcar.zero?
 
 end
 
