@@ -87,6 +87,7 @@ end
 
 def list(itens)
   itens.sort_by! { |e| e.category.name }
+  clear
   puts('LISTA DOS ITENS')
   categories_list = categories_menu
 
@@ -210,29 +211,22 @@ loop do
   case @option
   when 1
     create_item
-    continue
   when 2
-    clear
     list(@itens)
-    continue
   when 3
     search_by_keyword
-    continue
   when 4
     search_by_category
-    continue
   when 5
     delete_or_done(false)
-    continue
   when 6
     delete_or_done(true)
-    continue
   when 7
     list_done
-    continue
   when 8
     break
   end
+  continue
 end
 clear
 puts 'Obrigado por usar o diário de estudos'
