@@ -86,7 +86,7 @@ def create_item
   Tarefa.save_to_db(category, name, description)
 end
 
-def list(itens)
+def list(itens, number)
   itens.sort_by! { |e| e.category.name }
   clear
   puts('LISTA DOS ITENS')
@@ -97,7 +97,8 @@ def list(itens)
       puts("==== ##{index + 1} - #{category} ====")
       itens.each_with_index do |item, item_index|
         if item.category.name.to_i == index + 1
-          puts("#{item_index + 1} - #{item.title}: #{item.description}")
+          print("#{item_index + 1} - ") if number
+          puts("#{item.title}: #{item.description}")
         end
       end
       puts("\n")
@@ -117,7 +118,7 @@ def search_by_keyword
     puts('__________________________________')
   else
     puts "#{filtered_itens.length} iten(s) encontrado(s):\n\n"
-    list(filtered_itens)
+    list(filtered_itens, false)
   end
 end
 
@@ -138,7 +139,7 @@ def search_by_category
     puts('__________________________________')
   else
     puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens)
+    list(filtered_itens, true)
   end
 end
 
@@ -146,7 +147,7 @@ def delete_or_done(done)
   clear
   done ? puts('MARCAR COMO FEITO') : puts('EXCLUIR UM ITEM')
 
-  list(@itens)
+  list(@itens, false)
   print('Escolha a categoria [0 p/ voltar]: ')
   categories_list = categories_menu
 
@@ -171,7 +172,7 @@ def delete_or_done(done)
     puts('__________________________________')
   else
     puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens)
+    list(filtered_itens, true)
   end
 
   print('Escolha o item [0 p/ voltar]: ')
@@ -196,7 +197,7 @@ def list_done
     puts('__________________________________')
   else
     puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens)
+    list(filtered_itens, false)
   end
 end
 
@@ -211,7 +212,7 @@ loop do
   when 1
     create_item
   when 2
-    list(@itens)
+    list(@itens, false)
   when 3
     search_by_keyword
   when 4
