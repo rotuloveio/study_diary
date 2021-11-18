@@ -1,4 +1,5 @@
 require_relative 'Tarefa'
+require 'colorize'
 
 def options_menu
   options = <<~OPTIONS
@@ -31,24 +32,26 @@ end
 
 def menu
   clear
-  puts('DIÁRIO DE TAREFAS')
+  puts('DIÁRIO DE TAREFAS'.green)
   @itens = Tarefa.all
 
   options_list = options_menu
   options_list.each_with_index do |text, index|
-    puts "[#{index + 1}] #{text}"
+    print("[#{index + 1}] ".green)
+    puts(text)
   end
-  print('Sua opção: ')
+  print('Sua opção: '.green)
 
   valid_options = (1..options_list.size).to_a
   input = gets.chomp.to_i
   until valid_options.include?(input)
     clear
-    puts('Opção inválida!')
+    puts('Opção inválida!'.yellow)
     options_list.each_with_index do |text, index|
-      puts("[#{index + 1}] #{text}")
+      print("[#{index + 1}] ".green)
+      puts(text)
     end
-    print('Sua opção: ')
+    print('Sua opção: '.green)
     input = gets.chomp.to_i
   end
   @option = input
@@ -56,13 +59,14 @@ end
 
 def create_item
   clear
-  puts('CADASTRAR NOVO ITEM')
+  puts('CADASTRAR NOVO ITEM'.green)
   print('Digite o nome do item de estudo: ')
   name = gets.chomp
 
   categories_list = categories_menu
   categories_list.each_with_index do |text, index|
-    puts "[#{index + 1}] - #{text}"
+    print("[#{index + 1}] ".green)
+    puts(text)
   end
 
   valid_categories = (1..categories_list.size).to_a
@@ -71,9 +75,10 @@ def create_item
   input = gets.chomp.to_i
 
   until valid_categories.include?(input)
-    puts('Categoria inválida!')
+    puts('Categoria inválida!'.yellow)
     categories_list.each_with_index do |text, index|
-      puts("[*#{index + 1}] - #{text}")
+      print("[#{index + 1}] ".green)
+      puts(text)
     end
     input = gets.chomp.to_i
   end
@@ -89,15 +94,15 @@ end
 def list(itens, number)
   itens.sort_by! { |e| e.category.name }
   clear
-  puts('LISTA DOS ITENS')
+  puts('LISTA DOS ITENS'.green)
   categories_list = categories_menu
 
   categories_list.each_with_index do |category, index|
     if itens.map{|item| item.category.name.to_i}.uniq.include?(index + 1)
-      puts("==== ##{index + 1} - #{category} ====")
+      puts("============ ##{index + 1} - #{category} ============".blue)
       itens.each_with_index do |item, item_index|
         if item.category.name.to_i == index + 1
-          print("#{item_index + 1} - ") if number
+          print("#{item_index + 1} - ".green) if number
           puts("#{item.title}: #{item.description}")
         end
       end
@@ -109,15 +114,15 @@ end
 
 def search_by_keyword
   clear
-  puts('BUSCAR ITEM DE ESTUDO')
+  puts('BUSCAR ITEM DE ESTUDO'.green)
   print('Digite o termo desejado: ')
   key = gets.chomp.downcase
   filtered_itens = Tarefa.find_by_title(key)
   if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.')
+    puts('Nenhum item encontrado.'.yellow)
     puts('__________________________________')
   else
-    puts "#{filtered_itens.length} iten(s) encontrado(s):\n\n"
+    puts "#{filtered_itens.length} iten(s) encontrado(s):\n\n.green"
     list(filtered_itens, false)
   end
 end
@@ -135,7 +140,7 @@ def search_by_category
   filtered_itens = Tarefa.find_by_category(category)
 
   if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.')
+    puts('Nenhum item encontrado.'.yellow)
     puts('__________________________________')
   else
     puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
@@ -145,7 +150,7 @@ end
 
 def delete_or_done(done)
   clear
-  done ? puts('MARCAR COMO FEITO') : puts('EXCLUIR UM ITEM')
+  done ? puts('MARCAR COMO FEITO'.green) : puts('EXCLUIR UM ITEM'.green)
 
   list(@itens, false)
   print('Escolha a categoria [0 p/ voltar]: ')
@@ -156,19 +161,19 @@ def delete_or_done(done)
   category = gets.chomp.to_i
 
   until valid_categories.include?(category) || category.zero?
-    print('Categoria inválida! Escolha a categoria [0 p/ voltar]: ')
+    print('Categoria inválida! Escolha a categoria [0 p/ voltar]: '.yellow)
     category = gets.chomp.to_i
   end
 
   return if category.zero?
 
   clear
-  done ? puts('MARCAR COMO FEITO') : puts('EXCLUIR UM ITEM')
+  done ? puts('MARCAR COMO FEITO'.green) : puts('EXCLUIR UM ITEM'.green)
 
   filtered_itens = Tarefa.find_by_category(category)
 
   if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.')
+    puts('Nenhum item encontrado.'.yellow)
     puts('__________________________________')
   else
     puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
@@ -181,7 +186,7 @@ def delete_or_done(done)
   valid_itens = (1..filtered_itens.size).to_a
 
   until valid_itens.include?(index) || index.zero?
-    print('Opção inválida! Escolha o item [0 p/ voltar]: ')
+    print('Opção inválida! Escolha o item [0 p/ voltar]: '.yellow)
     index = gets.chomp.to_i
   end
   item = filtered_itens[index - 1]
@@ -190,10 +195,10 @@ end
 
 def list_done
   clear
-  puts('LISTAR FEITOS')
+  puts('LISTAR FEITOS'.green)
   filtered_itens = Tarefa.done
   if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.')
+    puts('Nenhum item encontrado.'.yellow)
     puts('__________________________________')
   else
     puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
@@ -202,7 +207,7 @@ def list_done
 end
 
 def continue
-  print("Pressione 'Enter' para continuar")
+  print("Pressione 'Enter' para continuar".green)
   gets
 end
 
