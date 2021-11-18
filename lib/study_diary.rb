@@ -36,13 +36,14 @@ def menu
 
   options_list = options_menu
   options_list.each_with_index do |text, index|
-    puts "[#{ index + 1 }] #{ text }"
+    puts "[#{index + 1}] #{text}"
   end
   print('Sua opção: ')
 
   valid_options = (1..options_list.size).to_a
   input = gets.chomp.to_i
   until valid_options.include?(input)
+    clear
     puts('Opção inválida!')
     options_list.each_with_index do |text, index|
       puts("[#{index + 1}] #{text}")
@@ -104,15 +105,13 @@ def list(itens)
   end
   puts '__________________________________'
 end
-  
+
 def search_by_keyword
   clear
   puts('BUSCAR ITEM DE ESTUDO')
   print('Digite o termo desejado: ')
   key = gets.chomp.downcase
-
   filtered_itens = Tarefa.find_by_title(key)
-
   if filtered_itens.length.zero?
     puts('Nenhum item encontrado.')
     puts('__________________________________')
@@ -127,7 +126,7 @@ def search_by_category
   puts('BUSCA POR CATEGORIA')
   categorys_list = categories_menu
   categorys_list.each_with_index do |text, index|
-    puts("##{ index + 1 } - #{ text }")
+    puts("##{index + 1} - #{text}")
   end
   print('Digite a categoria desejada: ')
   category = gets.chomp
