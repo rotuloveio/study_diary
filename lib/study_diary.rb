@@ -1,5 +1,6 @@
 require_relative 'Tarefa'
 require 'colorize'
+require "io/console"
 
 def options_menu
   options = <<~OPTIONS
@@ -208,8 +209,8 @@ def list_done
 end
 
 def continue
-  print("Pressione 'Enter' para continuar".green)
-  gets
+  print("Pressione qualquer tecla para continuar".green)
+  STDIN.getch
 end
 
 loop do
