@@ -103,8 +103,8 @@ def list(itens, number)
     puts("============ ##{index + 1} - #{category} ============".blue)
     itens.each_with_index do |item, item_index|
       if item.category.name.to_i == index + 1
-        print("#{item_index + 1}".green) if number
-        puts(" - #{item.title}: #{item.description}")
+        print("#{item_index + 1}".green + " - ") if number
+        puts("#{item.title}: #{item.description}")
       end
     end
     puts("\n")
