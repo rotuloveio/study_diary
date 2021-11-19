@@ -39,3 +39,5 @@ rescue SQLite3::Exception => e
 ensure
   db.close if db
 end
+
+puts "\n== Tudo configurado, execute 'ruby lib/study_diary.rb' para executar o programa =="
