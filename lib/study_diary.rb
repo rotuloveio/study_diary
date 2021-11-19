@@ -98,16 +98,16 @@ def list(itens, number)
   categories_list = categories_menu
 
   categories_list.each_with_index do |category, index|
-    if itens.map{|item| item.category.name.to_i}.uniq.include?(index + 1)
-      puts("============ ##{index + 1} - #{category} ============".blue)
-      itens.each_with_index do |item, item_index|
-        if item.category.name.to_i == index + 1
-          print("#{item_index + 1} - ".green) if number
-          puts("#{item.title}: #{item.description}")
-        end
+    next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index + 1)
+
+    puts("============ ##{index + 1} - #{category} ============".blue)
+    itens.each_with_index do |item, item_index|
+      if item.category.name.to_i == index + 1
+        print("#{item_index + 1}".green) if number
+        puts(" - #{item.title}: #{item.description}")
       end
-      puts("\n")
     end
+    puts("\n")
   end
   puts '__________________________________'
 end
@@ -129,10 +129,11 @@ end
 
 def search_by_category
   clear
-  puts('BUSCA POR CATEGORIA')
+  puts('BUSCA POR CATEGORIA'.green)
   categorys_list = categories_menu
   categorys_list.each_with_index do |text, index|
-    puts("##{index + 1} - #{text}")
+    print("##{index + 1}".green)
+    puts(" - #{text}")
   end
   print('Digite a categoria desejada: ')
   category = gets.chomp
