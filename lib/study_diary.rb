@@ -46,19 +46,16 @@ def menu
   @itens = Tarefa.all
 
   options_list = options_menu
-  options_list.each_with_index do |text, index|
-    puts(text)
-  end
+  options_list.each { |text| puts(text) }
+
   print('Sua opção: '.green)
 
   valid_options = (1..options_list.size).to_a
   input = gets.to_i
   until valid_options.include?(input)
     clear
-    puts('Opção inválida!'.yellow)
-    options_list.each_with_index do |text, index|
-      puts(text)
-    end
+    puts('DIÁRIO DE TAREFAS'.green)
+    options_list.each { |text| puts(text) }
     print('Sua opção: '.green)
     input = gets.to_i
   end
@@ -72,8 +69,8 @@ def create_item
   name = gets.chomp
 
   categories_list = categories_menu
-  categories_list.each_with_index do |text, index|
-    print("[#{index + 1}] ".green)
+  categories_list.each.with_index(1) do |text, index|
+    print("[#{index}] ".green)
     puts(text)
   end
 
@@ -84,8 +81,8 @@ def create_item
 
   until valid_categories.include?(input)
     puts('Categoria inválida!'.yellow)
-    categories_list.each_with_index do |text, index|
-      print("[#{index + 1}] ".green)
+    categories_list.each.with_index(1) do |text, index|
+      print("[#{index}] ".green)
       puts(text)
     end
     input = gets.to_i
@@ -105,14 +102,13 @@ def list(itens, number)
   clear
   puts('LISTA DOS ITENS'.green)
   categories_list = categories_menu
+  categories_list.each.with_index(1) do |category, index|
+    next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index)
 
-  categories_list.each_with_index do |category, index|
-    next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index + 1)
-
-    puts("============ ##{index + 1} - #{category} ============".blue)
-    itens.each_with_index do |item, item_index|
-      if item.category.name.to_i == index + 1
-        print("#{item_index + 1}".green + " - ") if number
+    puts("============ ##{index} - #{category} ============".blue)
+    itens.each.with_index(1) do |item, item_index|
+      if item.category.name.to_i == index
+        print("#{item_index}".green + " - ") if number
         puts("#{item.title}: #{item.description}")
       end
     end
@@ -135,8 +131,8 @@ def search_by_category
   clear
   puts('BUSCA POR CATEGORIA'.green)
   categorys_list = categories_menu
-  categorys_list.each_with_index do |text, index|
-    print("##{index + 1}".green)
+  categorys_list.each.with_index(1) do |text, index|
+    print("##{index}".green)
     puts(" - #{text}")
   end
   print('Digite a categoria desejada: ')
