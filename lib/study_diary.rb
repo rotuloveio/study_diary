@@ -1,17 +1,26 @@
 require_relative 'Tarefa'
 require 'colorize'
-require "io/console"
+require 'io/console'
+
+NEW_ITEM           = 1
+LIST_ALL           = 2
+SEARCH_BY_TERM     = 3
+SEARCH_BY_CATEGORY = 4
+DELETE_ITEM        = 5
+MARK_AS_DONE       = 6
+LIST_DONE          = 7
+EXIT               = 8
 
 def options_menu
   options = <<~OPTIONS
-    Cadastrar novo item de estudo
-    Ver itens cadastrados
-    Buscar item de estudo
-    Busca por categoria
-    Excluir um item
-    Marcar como feito
-    Listar feitos
-    Sair
+    [#{NEW_ITEM}] Cadastrar novo item de estudo
+    [#{LIST_ALL}] Ver itens cadastrados
+    [#{SEARCH_BY_TERM}] Buscar item de estudo
+    [#{SEARCH_BY_CATEGORY}] Busca por categoria
+    [#{DELETE_ITEM}] Excluir um item
+    [#{MARK_AS_DONE}] Marcar como feito
+    [#{LIST_DONE}] Listar feitos
+    [#{EXIT}] Sair
   OPTIONS
 
   options.split("\n")
@@ -38,7 +47,6 @@ def menu
 
   options_list = options_menu
   options_list.each_with_index do |text, index|
-    print("[#{index + 1}] ".green)
     puts(text)
   end
   print('Sua opção: '.green)
@@ -49,7 +57,6 @@ def menu
     clear
     puts('Opção inválida!'.yellow)
     options_list.each_with_index do |text, index|
-      print("[#{index + 1}] ".green)
       puts(text)
     end
     print('Sua opção: '.green)
@@ -119,13 +126,8 @@ def search_by_keyword
   print('Digite o termo desejado: ')
   key = gets.chomp.downcase
   filtered_itens = Tarefa.find_by_title(key)
-  if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.'.yellow)
-    puts('__________________________________')
-  else
-    puts "#{filtered_itens.length} iten(s) encontrado(s):\n\n.green"
-    list(filtered_itens, false)
-  end
+
+  pre_list(filtered_itens, false)
 end
 
 def search_by_category
@@ -141,13 +143,8 @@ def search_by_category
 
   filtered_itens = Tarefa.find_by_category(category)
 
-  if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.'.yellow)
-    puts('__________________________________')
-  else
-    puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens, true)
-  end
+  pre_list(filtered_itens, true)
+
 end
 
 def delete_or_done(done)
@@ -174,13 +171,7 @@ def delete_or_done(done)
 
   filtered_itens = Tarefa.find_by_category(category)
 
-  if filtered_itens.length.zero?
-    puts('Nenhum item encontrado.'.yellow)
-    puts('__________________________________')
-  else
-    puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens, true)
-  end
+  pre_list(filtered_itens, true)
 
   print('Escolha o item [0 p/ voltar]: ')
   index = gets.chomp.to_i
@@ -199,38 +190,42 @@ def list_done
   clear
   puts('LISTAR FEITOS'.green)
   filtered_itens = Tarefa.done
-  if filtered_itens.length.zero?
+  pre_list(filtered_itens, false)
+end
+
+def pre_list(itens, number)
+  if itens.length.zero?
     puts('Nenhum item encontrado.'.yellow)
     puts('__________________________________')
   else
-    puts("#{filtered_itens.length} iten(s) encontrado(s):\n\n")
-    list(filtered_itens, false)
+    puts("#{itens.length} iten(s) encontrado(s):\n\n")
+    list(itens, number)
   end
 end
 
 def continue
-  print("Pressione qualquer tecla para continuar".green)
+  print('Pressione qualquer tecla para continuar'.green)
   STDIN.getch
 end
 
 loop do
   menu
   case @option
-  when 1
+  when NEW_ITEM
     create_item
-  when 2
+  when LIST_ALL
     list(@itens, false)
-  when 3
+  when SEARCH_BY_TERM
     search_by_keyword
-  when 4
+  when SEARCH_BY_CATEGORY
     search_by_category
-  when 5
+  when DELETE_ITEM
     delete_or_done(false)
-  when 6
+  when MARK_AS_DONE
     delete_or_done(true)
-  when 7
+  when LIST_DONE
     list_done
-  when 8
+  when EXIT
     break
   end
   continue
