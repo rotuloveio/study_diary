@@ -32,9 +32,9 @@ class Tarefa
     end
   end
 
-  def self.save_to_db(category, title, description)
+  def self.save_to_db(task)
     db = SQLite3::Database.open 'db/database.db'
-    db.execute "INSERT INTO tasks VALUES('#{category}', '#{title}', '#{description}')"
+    db.execute "INSERT INTO tasks VALUES('#{task.category.name}', '#{task.title}', '#{task.description}')"
     db.close
 
     self
@@ -62,10 +62,10 @@ class Tarefa
     end
   end
 
-  def self.delete_or_done(category, title, description, done)
+  def self.delete_or_done(task, done)
     db = SQLite3::Database.open 'db/database.db'
-    db.execute "DELETE FROM tasks WHERE title LIKE '#{title}' AND category LIKE '#{category}'"
-    db.execute "INSERT INTO done VALUES ('#{category}', '#{title}', '#{description}')" if done
+    db.execute "DELETE FROM tasks WHERE title LIKE '#{task.title}' AND category LIKE '#{task.category.name}'"
+    db.execute "INSERT INTO done VALUES ('#{task.category.name}', '#{task.title}', '#{task.description}')" if done
     db.close
   end
 end

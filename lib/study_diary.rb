@@ -52,7 +52,7 @@ def menu
   print('Sua opção: '.green)
 
   valid_options = (1..options_list.size).to_a
-  input = gets.chomp.to_i
+  input = gets.to_i
   until valid_options.include?(input)
     clear
     puts('Opção inválida!'.yellow)
@@ -60,7 +60,7 @@ def menu
       puts(text)
     end
     print('Sua opção: '.green)
-    input = gets.chomp.to_i
+    input = gets.to_i
   end
   @option = input
 end
@@ -80,7 +80,7 @@ def create_item
   valid_categories = (1..categories_list.size).to_a
 
   print('Defina a categoria: ')
-  input = gets.chomp.to_i
+  input = gets.to_i
 
   until valid_categories.include?(input)
     puts('Categoria inválida!'.yellow)
@@ -88,7 +88,7 @@ def create_item
       print("[#{index + 1}] ".green)
       puts(text)
     end
-    input = gets.chomp.to_i
+    input = gets.to_i
   end
 
   category = input
@@ -96,7 +96,8 @@ def create_item
   print('Escreva a descrição do item: ')
   description = gets.chomp
 
-  Tarefa.save_to_db(category, name, description)
+  task = Tarefa.new(category: category, title: name, description: description)
+  Tarefa.save_to_db(task)
 end
 
 def list(itens, number)
@@ -144,7 +145,6 @@ def search_by_category
   filtered_itens = Tarefa.find_by_category(category)
 
   pre_list(filtered_itens, true)
-
 end
 
 def delete_or_done(done)
@@ -157,11 +157,11 @@ def delete_or_done(done)
 
   valid_categories = (1..categories_list.size).to_a
 
-  category = gets.chomp.to_i
+  category = gets.to_i
 
   until valid_categories.include?(category) || category.zero?
     print('Categoria inválida! Escolha a categoria [0 p/ voltar]: '.yellow)
-    category = gets.chomp.to_i
+    category = gets.to_i
   end
 
   return if category.zero?
@@ -174,16 +174,16 @@ def delete_or_done(done)
   pre_list(filtered_itens, true)
 
   print('Escolha o item [0 p/ voltar]: ')
-  index = gets.chomp.to_i
+  index = gets.to_i
 
   valid_itens = (1..filtered_itens.size).to_a
 
   until valid_itens.include?(index) || index.zero?
     print('Opção inválida! Escolha o item [0 p/ voltar]: '.yellow)
-    index = gets.chomp.to_i
+    index = gets.to_i
   end
   item = filtered_itens[index - 1]
-  Tarefa.delete_or_done(item.category.name, item.title, item.description, done) unless index.zero?
+  Tarefa.delete_or_done(item, done) unless index.zero?
 end
 
 def list_done
@@ -205,7 +205,7 @@ end
 
 def continue
   print('Pressione qualquer tecla para continuar'.green)
-  STDIN.getch
+  $stdin.getch
 end
 
 loop do
