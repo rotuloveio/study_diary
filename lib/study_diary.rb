@@ -130,13 +130,26 @@ end
 def search_by_category
   clear
   puts('BUSCA POR CATEGORIA'.green)
-  categorys_list = categories_menu
-  categorys_list.each.with_index(1) do |text, index|
+  categories_list = categories_menu
+  categories_list.each.with_index(1) do |text, index|
     print("##{index}".green)
     puts(" - #{text}")
   end
   print('Digite a categoria desejada: ')
-  category = gets.chomp
+  category = gets.to_i
+
+  valid_categories = (1..categories_list.size).to_a
+
+  until valid_categories.include?(category)
+    clear
+    puts('Categoria inválida!'.yellow)
+    categories_list.each.with_index(1) do |text, index|
+      print("##{index}".green)
+      puts(" - #{text}")
+    end
+    print('Digite a categoria desejada: ')
+    category = gets.to_i
+  end
 
   filtered_itens = Tarefa.find_by_category(category)
 
