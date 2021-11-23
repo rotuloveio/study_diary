@@ -26,7 +26,7 @@ begin
   SQL
 
   seed_data = [[1, 'Usar hashs', 'Estudar o uso de hashs'],
-               [3, 'Tabelas', 'Aprender a fazer tabelas'],
+               [3, 'APIs', 'Estudar seu uso'],
                [2, 'Banco de dados', 'Automatizar tabelas'],
                [1, 'Banco de dados', 'Uso sem Rails']]
 
