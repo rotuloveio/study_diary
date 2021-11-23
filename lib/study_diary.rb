@@ -68,6 +68,8 @@ def create_item
   print('Digite o nome do item de estudo: ')
   name = gets.chomp
 
+  clear
+  puts('CADASTRAR NOVO ITEM'.green)
   categories_list = categories_menu
   categories_list.each.with_index(1) do |text, index|
     print("[#{index}] ".green)
@@ -80,20 +82,26 @@ def create_item
   input = gets.to_i
 
   until valid_categories.include?(input)
+    clear
+    puts('CADASTRAR NOVO ITEM'.green)
     puts('Categoria inválida!'.yellow)
     categories_list.each.with_index(1) do |text, index|
       print("[#{index}] ".green)
       puts(text)
     end
+    print('Defina a categoria: ')
     input = gets.to_i
   end
 
   category = input
-
+  clear
+  puts('CADASTRAR NOVO ITEM'.green)
   print('Escreva a descrição do item: ')
   description = gets.chomp
 
   task = Tarefa.new(category: category, title: name, description: description)
+  clear
+  puts("Item \"#{task.title}\" da categoria \"#{categories_list[category - 1]}\" cadastrado com sucesso.")
   Tarefa.save_to_db(task)
 end
 
