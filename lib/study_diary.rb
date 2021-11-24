@@ -117,7 +117,7 @@ def list(itens, number)
     itens.each.with_index(1) do |item, item_index|
       if item.category.name.to_i == index
         print("#{item_index}".green + " - ") if number
-        puts("#{item.title}: #{item.description}")
+        puts(item)
       end
     end
     puts("\n")
@@ -130,7 +130,7 @@ def search_by_keyword
   puts('BUSCAR ITEM DE ESTUDO'.green)
   print('Digite o termo desejado: ')
   key = gets.chomp.downcase
-  filtered_itens = Tarefa.find_by_title(key)
+  filtered_itens = Tarefa.find_by_keyword(key)
 
   pre_list(filtered_itens, false)
 end
@@ -172,11 +172,11 @@ def delete_or_done(done)
   print('Escolha a categoria [0 p/ voltar]: ')
   categories_list = categories_menu
 
-  valid_categories = (1..categories_list.size).to_a
+  valid_categories = (0..categories_list.size).to_a
 
   category = gets.to_i
 
-  until valid_categories.include?(category) || category.zero?
+  until valid_categories.include?(category)
     print('Categoria inválida! Escolha a categoria [0 p/ voltar]: '.yellow)
     category = gets.to_i
   end
@@ -193,9 +193,9 @@ def delete_or_done(done)
   print('Escolha o item [0 p/ voltar]: ')
   index = gets.to_i
 
-  valid_itens = (1..filtered_itens.size).to_a
+  valid_itens = (0..filtered_itens.size).to_a
 
-  until valid_itens.include?(index) || index.zero?
+  until valid_itens.include?(index)
     print('Opção inválida! Escolha o item [0 p/ voltar]: '.yellow)
     index = gets.to_i
   end

@@ -40,10 +40,10 @@ class Tarefa
     self
   end
 
-  def self.find_by_title(title)
+  def self.find_by_keyword(keyword)
     db = SQLite3::Database.open 'db/database.db'
     db.results_as_hash = true
-    tasks = db.execute "SELECT title, category, descr FROM tasks where descr LIKE '%#{title}%' OR title LIKE '%#{title}%'"
+    tasks = db.execute "SELECT title, category, descr FROM tasks where descr LIKE '%#{keyword}%' OR title LIKE '%#{keyword}%'"
     db.close
 
     tasks.map do |task|
@@ -67,5 +67,9 @@ class Tarefa
     db.execute "DELETE FROM tasks WHERE title LIKE '#{task.title}' AND category LIKE '#{task.category.name}'"
     db.execute "INSERT INTO done VALUES ('#{task.category.name}', '#{task.title}', '#{task.description}')" if done
     db.close
+  end
+
+  def to_s
+    "#{title}: #{description}"
   end
 end
