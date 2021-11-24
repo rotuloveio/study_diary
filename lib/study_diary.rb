@@ -26,16 +26,6 @@ def options_menu
   options.split("\n")
 end
 
-def categories_menu
-  categories = <<~CATEGORIES
-    Ruby
-    Rails
-    Java Script
-  CATEGORIES
-
-  categories.split("\n")
-end
-
 def clear
   puts(`clear`)
 end
@@ -70,7 +60,7 @@ def create_item
 
   clear
   puts('CADASTRAR NOVO ITEM'.green)
-  categories_list = categories_menu
+  categories_list = Categoria.all
   categories_list.each.with_index(1) do |text, index|
     print("[#{index}] ".green)
     puts(text)
@@ -109,7 +99,7 @@ def list(itens, number)
   itens.sort_by! { |e| e.category.name }
   clear
   puts('LISTA DOS ITENS'.green)
-  categories_list = categories_menu
+  categories_list = Categoria.all
   categories_list.each.with_index(1) do |category, index|
     next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index)
 
@@ -138,7 +128,7 @@ end
 def search_by_category
   clear
   puts('BUSCA POR CATEGORIA'.green)
-  categories_list = categories_menu
+  categories_list = Categoria.all
   categories_list.each.with_index(1) do |text, index|
     print("##{index}".green)
     puts(" - #{text}")
@@ -170,7 +160,7 @@ def delete_or_done(done)
 
   list(@itens, false)
   print('Escolha a categoria [0 p/ voltar]: ')
-  categories_list = categories_menu
+  categories_list = Categoria.all
 
   valid_categories = (0..categories_list.size).to_a
 
