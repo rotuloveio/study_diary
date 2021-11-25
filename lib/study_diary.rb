@@ -141,8 +141,12 @@ def delete_or_done(done)
     print('Escolha o item [0 p/ voltar]: ')
     index = gets.to_i
   end
-  item = filtered_itens[index - 1]
-  Tarefa.delete_or_done(item, done) unless index.zero?
+  task = filtered_itens[index - 1]
+  clear
+  done ? puts('MARCAR COMO FEITO'.green) : puts('EXCLUIR UM ITEM'.green)
+  print("Item \"#{task.title}\" da categoria \"#{Categoria.all[category - 1]}\" ")
+  done ? puts('marcado como feito.') : puts('excluído com sucesso.')
+  Tarefa.delete_or_done(task, done) unless index.zero?
 end
 
 def pre_list(itens, number)
