@@ -54,7 +54,7 @@ def create_item
   until @valid_categories.include?(category)
     clear
     puts('CADASTRAR NOVO ITEM'.green)
-    categories_list.each.with_index(1) do |text, index|
+    Categoria.all.each.with_index(1) do |text, index|
       print("[#{index}] ".green)
       puts(text)
     end
@@ -69,7 +69,7 @@ def create_item
 
   task = Tarefa.new(category: category, title: name, description: description)
   clear
-  puts("Item \"#{task.title}\" da categoria \"#{categories_list[category - 1]}\" cadastrado com sucesso.")
+  puts("Item \"#{task.title}\" da categoria \"#{Categoria.all[category - 1]}\" cadastrado com sucesso.")
   Tarefa.save_to_db(task)
 end
 
