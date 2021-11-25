@@ -46,25 +46,20 @@ end
 
 def create_item
   clear
-  puts('CADASTRAR NOVO ITEM'.green)
-  print('Digite o nome do item de estudo: ')
+  print('CADASTRAR NOVO ITEM'.green + "\nDigite o nome do item de estudo: ")
   name = gets.chomp
 
   category = 0
   until @valid_categories.include?(category)
     clear
     puts('CADASTRAR NOVO ITEM'.green)
-    Categoria.all.each.with_index(1) do |text, index|
-      print("[#{index}] ".green)
-      puts(text)
-    end
+    Categoria.all.each.with_index(1) { |cat, index| puts("[#{index}] ".green + cat.to_s) }
     print('Defina a categoria: ')
     category = gets.to_i
   end
 
   clear
-  puts('CADASTRAR NOVO ITEM'.green)
-  print('Escreva a descrição do item: ')
+  print('CADASTRAR NOVO ITEM'.green + "\nEscreva a descrição do item: ")
   description = gets.chomp
 
   task = Tarefa.new(category: category, title: name, description: description)
@@ -91,11 +86,10 @@ end
 
 def search_by_keyword
   clear
-  puts('BUSCAR ITEM DE ESTUDO'.green)
-  print('Digite o termo desejado: ')
+  print('BUSCAR ITEM DE ESTUDO'.green + "\nDigite o termo desejado: ")
   key = gets.chomp.downcase
   filtered_itens = Tarefa.find_by_keyword(key)
-
+  clear
   pre_list(filtered_itens, false)
 end
 
@@ -107,8 +101,7 @@ def search_by_category
     clear
     puts('BUSCA POR CATEGORIA'.green)
     Categoria.all.each.with_index(1) do |cat, index|
-      print("##{index}".green)
-      puts(" - #{cat}")
+      puts("##{index}".green + " - #{cat}")
     end
     print('Digite a categoria desejada: ')
     category = gets.to_i
@@ -116,6 +109,7 @@ def search_by_category
 
   filtered_itens = Tarefa.find_by_category(category)
 
+  clear
   pre_list(filtered_itens, true)
 end
 
