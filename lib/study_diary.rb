@@ -69,6 +69,8 @@ def create_item
 end
 
 def list(itens, number)
+  return puts 'Nenhum item encontrado.'.yellow if itens.size.zero?
+
   itens.sort_by! { |e| e.category.name }
   Categoria.all.each.with_index(1) do |category, index|
     next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index)
@@ -90,7 +92,7 @@ def search_by_keyword
   key = gets.chomp.downcase
   filtered_itens = Tarefa.find_by_keyword(key)
   clear
-  pre_list(filtered_itens, false)
+  list(filtered_itens, false)
 end
 
 def search_by_category
@@ -110,7 +112,7 @@ def search_by_category
   filtered_itens = Tarefa.find_by_category(category)
 
   clear
-  pre_list(filtered_itens, true)
+  list(filtered_itens, true)
 end
 
 def delete_or_done(done)
@@ -132,7 +134,7 @@ def delete_or_done(done)
 
   filtered_itens = Tarefa.find_by_category(category)
 
-  pre_list(filtered_itens, true)
+  list(filtered_itens, true)
 
   index = -1
   valid_itens = (0..filtered_itens.size).to_a
@@ -149,10 +151,6 @@ def delete_or_done(done)
   Tarefa.delete_or_done(task, done) unless index.zero?
 end
 
-def pre_list(itens, number)
-  itens.length.zero? ? puts('Nenhum item encontrado.'.yellow + "\n______________________________") : list(itens, number)
-end
-
 def continue
   print('Pressione qualquer tecla para continuar'.green)
   $stdin.getch
@@ -166,7 +164,7 @@ loop do
   when LIST_ALL
     clear
     puts('LISTA DOS ITENS'.green)
-    pre_list(@itens, false)
+    list(@itens, false)
   when SEARCH_BY_TERM
     search_by_keyword
   when SEARCH_BY_CATEGORY
@@ -178,7 +176,7 @@ loop do
   when LIST_DONE
     clear
     puts('LISTA DOS ITENS FEITOS'.green)
-    pre_list(Tarefa.done, false)
+    list(Tarefa.done, false)
   when EXIT
     break
   end
