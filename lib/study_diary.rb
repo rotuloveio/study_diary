@@ -31,25 +31,17 @@ def clear
 end
 
 def menu
-  clear
-  puts('DIÁRIO DE TAREFAS'.green)
   @itens = Tarefa.all
-
-  options_list = options_menu
-  options_list.each { |text| puts(text) }
-
-  print('Sua opção: '.green)
-
-  valid_options = (1..options_list.size).to_a
-  input = gets.to_i
-  until valid_options.include?(input)
+  @valid_categories = (1..Categoria.all.size).to_a
+  valid_options = (1..options_menu.size).to_a
+  @option = 0
+  until valid_options.include?(@option)
     clear
     puts('DIÁRIO DE TAREFAS'.green)
-    options_list.each { |text| puts(text) }
+    puts(options_menu)
     print('Sua opção: '.green)
-    input = gets.to_i
+    @option = gets.to_i
   end
-  @option = input
 end
 
 def create_item
@@ -58,32 +50,18 @@ def create_item
   print('Digite o nome do item de estudo: ')
   name = gets.chomp
 
-  clear
-  puts('CADASTRAR NOVO ITEM'.green)
-  categories_list = Categoria.all
-  categories_list.each.with_index(1) do |text, index|
-    print("[#{index}] ".green)
-    puts(text)
-  end
-
-  valid_categories = (1..categories_list.size).to_a
-
-  print('Defina a categoria: ')
-  input = gets.to_i
-
-  until valid_categories.include?(input)
+  category = 0
+  until @valid_categories.include?(category)
     clear
     puts('CADASTRAR NOVO ITEM'.green)
-    puts('Categoria inválida!'.yellow)
     categories_list.each.with_index(1) do |text, index|
       print("[#{index}] ".green)
       puts(text)
     end
     print('Defina a categoria: ')
-    input = gets.to_i
+    category = gets.to_i
   end
 
-  category = input
   clear
   puts('CADASTRAR NOVO ITEM'.green)
   print('Escreva a descrição do item: ')
@@ -97,8 +75,6 @@ end
 
 def list(itens, number)
   itens.sort_by! { |e| e.category.name }
-  clear
-  puts('LISTA DOS ITENS'.green)
   categories_list = Categoria.all
   categories_list.each.with_index(1) do |category, index|
     next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index)
@@ -127,23 +103,14 @@ end
 
 def search_by_category
   clear
-  puts('BUSCA POR CATEGORIA'.green)
-  categories_list = Categoria.all
-  categories_list.each.with_index(1) do |text, index|
-    print("##{index}".green)
-    puts(" - #{text}")
-  end
-  print('Digite a categoria desejada: ')
-  category = gets.to_i
+  category = 0
 
-  valid_categories = (1..categories_list.size).to_a
-
-  until valid_categories.include?(category)
+  until @valid_categories.include?(category)
     clear
-    puts('Categoria inválida!'.yellow)
-    categories_list.each.with_index(1) do |text, index|
+    puts('BUSCA POR CATEGORIA'.green)
+    Categoria.all.each.with_index(1) do |cat, index|
       print("##{index}".green)
-      puts(" - #{text}")
+      puts(" - #{cat}")
     end
     print('Digite a categoria desejada: ')
     category = gets.to_i
@@ -159,15 +126,10 @@ def delete_or_done(done)
   done ? puts('MARCAR COMO FEITO'.green) : puts('EXCLUIR UM ITEM'.green)
 
   list(@itens, false)
-  print('Escolha a categoria [0 p/ voltar]: ')
-  categories_list = Categoria.all
+  category = -1
 
-  valid_categories = (0..categories_list.size).to_a
-
-  category = gets.to_i
-
-  until valid_categories.include?(category)
-    print('Categoria inválida! Escolha a categoria [0 p/ voltar]: '.yellow)
+  until @valid_categories.include?(category) || category.zero?
+    print('Escolha a categoria [0 p/ voltar]: ')
     category = gets.to_i
   end
 
@@ -180,34 +142,19 @@ def delete_or_done(done)
 
   pre_list(filtered_itens, true)
 
-  print('Escolha o item [0 p/ voltar]: ')
-  index = gets.to_i
-
+  index = -1
   valid_itens = (0..filtered_itens.size).to_a
 
   until valid_itens.include?(index)
-    print('Opção inválida! Escolha o item [0 p/ voltar]: '.yellow)
+    print('Escolha o item [0 p/ voltar]: ')
     index = gets.to_i
   end
   item = filtered_itens[index - 1]
   Tarefa.delete_or_done(item, done) unless index.zero?
 end
 
-def list_done
-  clear
-  puts('LISTAR FEITOS'.green)
-  filtered_itens = Tarefa.done
-  pre_list(filtered_itens, false)
-end
-
 def pre_list(itens, number)
-  if itens.length.zero?
-    puts('Nenhum item encontrado.'.yellow)
-    puts('__________________________________')
-  else
-    puts("#{itens.length} iten(s) encontrado(s):\n\n")
-    list(itens, number)
-  end
+  itens.length.zero? ? puts('Nenhum item encontrado.'.yellow + "\n______________________________") : list(itens, number)
 end
 
 def continue
@@ -221,7 +168,9 @@ loop do
   when NEW_ITEM
     create_item
   when LIST_ALL
-    list(@itens, false)
+    clear
+    puts('LISTA DOS ITENS'.green)
+    pre_list(@itens, false)
   when SEARCH_BY_TERM
     search_by_keyword
   when SEARCH_BY_CATEGORY
@@ -231,7 +180,9 @@ loop do
   when MARK_AS_DONE
     delete_or_done(true)
   when LIST_DONE
-    list_done
+    clear
+    puts('LISTA DOS ITENS FEITOS'.green)
+    pre_list(Tarefa.done, false)
   when EXIT
     break
   end
