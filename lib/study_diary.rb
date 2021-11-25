@@ -90,29 +90,23 @@ def search_by_keyword
   clear
   print('BUSCAR ITEM DE ESTUDO'.green + "\nDigite o termo desejado: ")
   key = gets.chomp.downcase
-  filtered_itens = Tarefa.find_by_keyword(key)
   clear
-  list(filtered_itens, false)
+  list(Tarefa.find_by_keyword(key), false)
 end
 
 def search_by_category
-  clear
   category = 0
 
   until @valid_categories.include?(category)
     clear
     puts('BUSCA POR CATEGORIA'.green)
-    Categoria.all.each.with_index(1) do |cat, index|
-      puts("##{index}".green + " - #{cat}")
-    end
+    Categoria.all.each.with_index(1) { |cat, index| puts("##{index}".green + " - #{cat}") }
     print('Digite a categoria desejada: ')
     category = gets.to_i
   end
 
-  filtered_itens = Tarefa.find_by_category(category)
-
   clear
-  list(filtered_itens, true)
+  list(Tarefa.find_by_category(category), false)
 end
 
 def delete_or_done(done)
