@@ -75,8 +75,7 @@ end
 
 def list(itens, number)
   itens.sort_by! { |e| e.category.name }
-  categories_list = Categoria.all
-  categories_list.each.with_index(1) do |category, index|
+  Categoria.all.each.with_index(1) do |category, index|
     next unless itens.map { |item| item.category.name.to_i }.uniq.include?(index)
 
     puts("============ ##{index} - #{category} ============".blue)
@@ -86,9 +85,8 @@ def list(itens, number)
         puts(item)
       end
     end
-    puts("\n")
+    puts
   end
-  puts '__________________________________'
 end
 
 def search_by_keyword
